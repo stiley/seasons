@@ -1,37 +1,38 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import SeasonDisplay from "./SeasonDisplay";
 
-class App extends React.Component{
+class App extends React.Component {
+    state = {lat: null, errorMessage: ''};
 
-    // not required by react - This is a JS object CTor
-    constructor(props){
-        // must call the parent CTOR
-        super(props);
-        // THIS IS THE ONLY TIME WE DO DIRECT ASSIGNMENT TO OUR STATE!!!!
-        this.state = {lat: null, errorMessage: ''};
-        window.navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({lat: position.coords.latitude})
-            },
-            (err) =>  {
-                console.log(err)
-                this.setState({errorMessage: err.message})
-        }
-        );
-    }
     // react requires we define render that returns JSK
-    render(){
-        if(this.state.errorMessage && !this.state.lat){
-             return <div>Error: {this.state.errorMessage}</div>
+    render() {
+        console.log("My component rendered")
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
         }
-        if(this.state.lat && !this.state.errorMessage){
-            return <div>Latitude: {this.state.lat}</div>
+        if (this.state.lat && !this.state.errorMessage) {
+            return <SeasonDisplay lat={this.state.lat}/>
         }
         return <div>loading user location...</div>
     }
+
+    componentDidMount() {
+        window.navigator.geolocation.getCurrentPosition(
+            position => this.setState({lat: position.coords.latitude}),
+            err => this.setState({errorMessage: err.message})
+        );
+    }
+
+    componentDidUpdate() {
+        console.log("componentDidUpdate - Called")
+    }
+
+
+
 }
 
 ReactDOM.render(
-  <App />,
-  document.querySelector("#root")
+    <App/>,
+    document.querySelector("#root")
 );
