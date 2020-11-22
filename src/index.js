@@ -6,7 +6,7 @@ import Spinner from "./Spinnner";
 class App extends React.Component {
     state = {lat: null, errorMessage: ''};
 
-    renderContent() {
+    getContentToRender() {
         if (this.state.errorMessage && !this.state.lat) {
             return <div>Error: {this.state.errorMessage}</div>
         }
@@ -18,10 +18,10 @@ class App extends React.Component {
     // react requires we define render that returns JSK
     render() {
         return (
-            this.renderContent()
+            this.getContentToRender()
         );
     }
-    componentDidMount() {
+    componentDidMount() {  // loading stuff should go here
         window.navigator.geolocation.getCurrentPosition(
             position => this.setState({lat: position.coords.latitude}),
             err => this.setState({errorMessage: err.message})
